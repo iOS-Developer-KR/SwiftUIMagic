@@ -17,7 +17,7 @@ public struct TopTabBar<Content: View>: View {
     @State private var verticalOffset: CGFloat = 0
     
     
-    init(@ViewBuilder content: () -> Content, arr: [String]) {
+    public init(@ViewBuilder content: () -> Content, arr: [String]) {
         self.contents = content()
         self.tabs = arr
     }
