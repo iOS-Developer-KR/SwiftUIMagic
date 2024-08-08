@@ -8,7 +8,7 @@
 import SwiftUI
 
 @available(iOS 17.0, *)
-struct MainContainer<Content: View>: View {
+struct TopTabBar<Content: View>: View {
     
     let contents: Content
     
@@ -73,7 +73,7 @@ struct MainContainer<Content: View>: View {
 
 @available(iOS 17.0, *)
 #Preview {
-    MainContainer(content: {
+    TopTabBar(content: {
                 Text("First View")
                 Text("Second View")
                 Text("Third View")
