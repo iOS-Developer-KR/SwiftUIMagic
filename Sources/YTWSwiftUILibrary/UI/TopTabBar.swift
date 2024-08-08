@@ -8,20 +8,21 @@
 import SwiftUI
 
 @available(iOS 17.0, *)
-struct TopTabBar<Content: View>: View {
+public struct TopTabBar<Content: View>: View {
     
     let contents: Content
+    private var tabs: [String] = []
     
     @State private var selectedTab = 0
     @State private var verticalOffset: CGFloat = 0
-    private var tabs: [String] = []
+    
     
     init(@ViewBuilder content: () -> Content, arr: [String]) {
         self.contents = content()
         self.tabs = arr
     }
     
-    var body: some View {
+    public var body: some View {
         VStack {
             HStack {
                 ForEach(Array(tabs.enumerated()), id: \.offset) { obj in
