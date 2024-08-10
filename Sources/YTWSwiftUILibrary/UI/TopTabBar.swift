@@ -42,15 +42,15 @@ public struct TopTabBar<Content: View>: View {
     
     let contents: Content
     let textComponent: TextComponent
-    let underlineComponent: UnderLineComponent
+    var underlineComponent: UnderLineComponent
     
     @State private var selectedTab = 0
     @State private var verticalOffset: CGFloat = 0
     
-    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent) {
+    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil) {
         self.contents = content()
-        self.textComponent = TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"], selectedColor: Color.red, unselectedColor: Color.gray, isBold: true)
-        self.underlineComponent = UnderLineComponent(visible: true, color: Color.black, thickness: 1.0)
+        self.textComponent = text
+        self.underlineComponent = underline ?? UnderLineComponent(visible: true, color: .black, thickness: 1.0)
     }
     
     public var body: some View {
