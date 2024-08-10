@@ -14,7 +14,7 @@ public class UnderLineComponent {
     var color: Color
     var thickness: CGFloat
     
-    init(visible: Bool = true, color: Color = Color.black, thickness: CGFloat = 1.0) {
+    public init(visible: Bool = true, color: Color = Color.black, thickness: CGFloat = 1.0) {
         self.visible = visible
         self.color = color
         self.thickness = thickness
@@ -28,7 +28,7 @@ public class TextComponent {
     var unselectedColor: Color
     var isBold: Bool
     
-    init(tabs: [String], selectedColor: Color = Color.black, unselectedColor: Color = Color.gray, isBold: Bool = true) {
+    public init(tabs: [String], selectedColor: Color = Color.black, unselectedColor: Color = Color.gray, isBold: Bool = true) {
         self.tabs = tabs
         self.selectedColor = selectedColor
         self.unselectedColor = unselectedColor
