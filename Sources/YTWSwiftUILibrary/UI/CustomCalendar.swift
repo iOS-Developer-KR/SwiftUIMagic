@@ -17,46 +17,13 @@ enum CalendarTab: String, CaseIterable, Identifiable {
 
 @available(iOS 17.0, *)
 struct CustomCalendarView: View {
-    @State private var selectedTab: CalendarTab = .month
+//    @State private var selectedTab: CalendarTab = .month
     @State private var currentMonth: Date = Date()
     @State private var notes: [Date: String] = [:]
     @State private var selectedDate: Date = Date()
 
     var body: some View {
-        VStack {
-            Picker("Calendar View", selection: $selectedTab) {
-                ForEach(CalendarTab.allCases) { tab in
-                    Text(tab.rawValue).tag(tab)
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
-
-            if selectedTab == .month {
-                MonthView(currentMonth: $currentMonth, selectedDate: $selectedDate)
-            } else if selectedTab == .week {
-                WeekView(selectedDate: $selectedDate)
-            } else {
-                DayView(selectedDate: $selectedDate)
-            }
-
-            Divider()
-
-//            // Display the note input area
-//            Text("Notes for \(selectedDate, formatter: dateFormatter):")
-//                .font(.headline)
-//                .padding(.top)
-//
-//            TextEditor(text: Binding(
-//                get: { notes[selectedDate] ?? "" },
-//                set: { notes[selectedDate] = $0 }
-//            ))
-//            .frame(height: 100)
-//            .padding()
-//            .background(Color(.systemGray6))
-//            .cornerRadius(8)
-//            .padding()
-        }
+        MonthView(currentMonth: $currentMonth, selectedDate: $selectedDate)
     }
 }
 
@@ -106,36 +73,6 @@ struct MonthView: View {
 }
 
 @available(iOS 17.0, *)
-struct WeekView: View {
-    @Binding var selectedDate: Date
-
-    var body: some View {
-        VStack {
-            Text("Week View")
-                .font(.headline)
-
-            CalendarGridView(selectedDate: $selectedDate, currentMonth: .constant(Date()), calendar: .current, isWeekView: true)
-        }
-        .padding()
-    }
-}
-
-@available(iOS 17.0, *)
-struct DayView: View {
-    @Binding var selectedDate: Date
-
-    var body: some View {
-        VStack {
-            Text("Day View")
-                .font(.headline)
-
-            Text("\(selectedDate, formatter: dateFormatter)")
-                .padding()
-        }
-    }
-}
-
-@available(iOS 17.0, *)
 struct CalendarGridView: View {
     @Binding var selectedDate: Date
     @Binding var currentMonth: Date
@@ -144,7 +81,7 @@ struct CalendarGridView: View {
 
     var body: some View {
         // Get the start and end dates for the calendar view
-        let dateRange = isWeekView ? weekDateRange() : monthDateRange()
+        let dateRange = monthDateRange()
         let dates = generateDates(for: dateRange, calendar: calendar)
 
         // Display the dates in a grid
@@ -155,12 +92,11 @@ struct CalendarGridView: View {
                         Circle()
                             .foregroundStyle(Color.blue.opacity(0.2))
                     }
-                    
                     Text("\(calendar.component(.day, from: date))")
                         .padding(.vertical)
                         .onTapGesture {
-                            // Update the selected date on tap
                             selectedDate = date
+                            print(date)
                         }
                     
                 }
@@ -192,22 +128,16 @@ struct CalendarGridView: View {
     }
 }
 
-// Month formatter to format month strings
+// Korea DateFormatter
 private let monthFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "MMMM yyyy"
+    formatter.dateFormat = "YYYY년 M월"
+    formatter.locale = .autoupdatingCurrent
     return formatter
 }()
-
-@available(iOS 17.0, *)
-struct CustomCalendarView_Previews: PreviewProvider {
-    static var previews: some View {
-        CustomCalendarView()
-    }
-}
-
 
 @available(iOS 17.0, *)
 #Preview {
     CustomCalendarView()
 }
+
