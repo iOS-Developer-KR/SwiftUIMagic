@@ -1,6 +1,6 @@
 //
 //  SwiftUIView.swift
-//  
+//
 //
 //  Created by Taewon Yoon on 8/8/24.
 //
@@ -46,14 +46,14 @@ public struct TopTabBar<Content: View>: View {
     
     @State private var selectedTab = 0
     @State private var verticalOffset: CGFloat = 0
-    var visible: Bool
+    @Binding var visible: Bool
     
     
-    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil, visible: Bool = true) {
+    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil, visible: Binding<Bool>) {
         self.contents = content()
         self.textComponent = text
         self.underlineComponent = underline ?? UnderLineComponent(visible: true, color: .black, thickness: 1.0)
-        self.visible = visible
+        _visible = visible
     }
     
     public var body: some View {
@@ -96,7 +96,7 @@ public struct TopTabBar<Content: View>: View {
                 .animation(.easeInOut, value: selectedTab)
                 .animation(.easeInOut, value: verticalOffset)
                 .gesture(
-                    DragGesture()
+                    visible ? DragGesture()
                         .onChanged { value in
                             verticalOffset = value.translation.width
                         }
@@ -109,7 +109,9 @@ public struct TopTabBar<Content: View>: View {
                             }
                             verticalOffset = 0
                         }
+                    : nil
                 )
+
             }
         }
         
@@ -125,7 +127,7 @@ public struct TopTabBar<Content: View>: View {
         Text("First View")
         Text("Second View")
         Text("Third View")
-    }, text: TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"]), underline: UnderLineComponent(), visible: true)
+    }, text: TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"]), underline: UnderLineComponent(), visible: .constant(false))
 }
 
 @available(iOS 17.0, *)
