@@ -46,14 +46,14 @@ public struct TopTabBar<Content: View>: View {
     
     @State private var selectedTab = 0
     @State private var verticalOffset: CGFloat = 0
-    var visible: Bool
+    @Binding var visible: Bool
     
     
-    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil, visible: Bool = true) {
+    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil, visible: Binding<Bool> = .constant(false)) {
         self.contents = content()
         self.textComponent = text
         self.underlineComponent = underline ?? UnderLineComponent(visible: true, color: .black, thickness: 1.0)
-        self.visible = visible
+        _visible = visible
     }
     
 
@@ -127,7 +127,7 @@ public struct TopTabBar<Content: View>: View {
         Text("First View")
         Text("Second View")
         Text("Third View")
-    }, text: TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"]), underline: UnderLineComponent(), visible: false)
+    }, text: TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"]), underline: UnderLineComponent(), visible: .constant(false))
 //    }, text: TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"]), underline: UnderLineComponent())
 //    TopTabBar(content: {
 //                Text("First View")
