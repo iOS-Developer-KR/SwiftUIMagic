@@ -46,44 +46,48 @@ public struct TopTabBar<Content: View>: View {
     
     @State private var selectedTab = 0
     @State private var verticalOffset: CGFloat = 0
-    @Binding var visible: Bool
+    var visible: Bool
     
     
-    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil, visible: Binding<Bool>) {
+    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil, visible: Bool = false) {
         self.contents = content()
         self.textComponent = text
         self.underlineComponent = underline ?? UnderLineComponent(visible: true, color: .black, thickness: 1.0)
-        _visible = visible
+        self.visible = visible
     }
+    
+//    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil) {
+//        self.contents = content()
+//        self.textComponent = text
+//        self.underlineComponent = underline ?? UnderLineComponent(visible: true, color: .black, thickness: 1.0)
+//    }
     
     public var body: some View {
         VStack {
-            if visible {
-                HStack {
-                    ForEach(Array(textComponent.tabs.enumerated()), id: \.offset) { obj in
-                        Button {
-                            selectedTab = obj.offset
-                            print(selectedTab)
-                        } label: {
-                            VStack {
-                                Text(obj.element)
-                                    .bold(selectedTab == obj.offset)
-                                    .foregroundStyle(obj.offset == selectedTab ? textComponent.selectedColor : textComponent.unselectedColor)
-                                    .overlay {
-                                        if underlineComponent.visible && selectedTab == obj.offset {
-                                            underlineComponent.color
-                                                .frame(width: UIScreen.main.bounds.width/3, height: underlineComponent.thickness)
-                                                .offset(x: -(verticalOffset/3), y: 20)
-                                        }
+            HStack {
+                ForEach(Array(textComponent.tabs.enumerated()), id: \.offset) { obj in
+                    Button {
+                        selectedTab = obj.offset
+                        print(selectedTab)
+                    } label: {
+                        VStack {
+                            Text(obj.element)
+                                .bold(selectedTab == obj.offset)
+                                .foregroundStyle(obj.offset == selectedTab ? textComponent.selectedColor : textComponent.unselectedColor)
+                                .overlay {
+                                    if underlineComponent.visible && selectedTab == obj.offset {
+                                        underlineComponent.color
+                                            .frame(width: UIScreen.main.bounds.width/3, height: underlineComponent.thickness)
+                                            .offset(x: -(verticalOffset/3), y: 20)
                                     }
-                            }
+                                }
                         }
-                        .frame(maxWidth: .infinity)
                     }
+                    .frame(maxWidth: .infinity)
                 }
-                
-                Divider()
             }
+            
+            Divider()
             
             GeometryReader { geometry in
                 HStack(spacing: 0) {
@@ -96,7 +100,7 @@ public struct TopTabBar<Content: View>: View {
                 .animation(.easeInOut, value: selectedTab)
                 .animation(.easeInOut, value: verticalOffset)
                 .gesture(
-                    visible ? DragGesture()
+                    DragGesture()
                         .onChanged { value in
                             verticalOffset = value.translation.width
                         }
@@ -109,7 +113,6 @@ public struct TopTabBar<Content: View>: View {
                             }
                             verticalOffset = 0
                         }
-                    : nil
                 )
 
             }
@@ -127,7 +130,18 @@ public struct TopTabBar<Content: View>: View {
         Text("First View")
         Text("Second View")
         Text("Third View")
-    }, text: TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"]), underline: UnderLineComponent(), visible: .constant(false))
+    }, text: TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"]), underline: UnderLineComponent(), visible: false)
+//    }, text: TextComponent(tabs: ["자산", "소비﹒수입", "연말정산"]), underline: UnderLineComponent())
+//    TopTabBar(content: {
+//                Text("First View")
+//                Text("Second View")
+//                Text("Third View")
+//            }, 
+//              arr: ["자산", "소비﹒수입", "연말정산"],
+//              unselectColor: Color.gray,
+//              selectColor: Color.red,
+//              underline: UnderLineComponent()
+//    )
 }
 
 @available(iOS 17.0, *)
