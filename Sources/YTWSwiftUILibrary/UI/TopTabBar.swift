@@ -49,45 +49,42 @@ public struct TopTabBar<Content: View>: View {
     var visible: Bool
     
     
-    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil, visible: Bool = false) {
+    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil, visible: Bool = true) {
         self.contents = content()
         self.textComponent = text
         self.underlineComponent = underline ?? UnderLineComponent(visible: true, color: .black, thickness: 1.0)
         self.visible = visible
     }
     
-//    public init(@ViewBuilder content: () -> Content, text: TextComponent, underline: UnderLineComponent? = nil) {
-//        self.contents = content()
-//        self.textComponent = text
-//        self.underlineComponent = underline ?? UnderLineComponent(visible: true, color: .black, thickness: 1.0)
-//    }
-    
+
     public var body: some View {
         VStack {
-            HStack {
-                ForEach(Array(textComponent.tabs.enumerated()), id: \.offset) { obj in
-                    Button {
-                        selectedTab = obj.offset
-                        print(selectedTab)
-                    } label: {
-                        VStack {
-                            Text(obj.element)
-                                .bold(selectedTab == obj.offset)
-                                .foregroundStyle(obj.offset == selectedTab ? textComponent.selectedColor : textComponent.unselectedColor)
-                                .overlay {
-                                    if underlineComponent.visible && selectedTab == obj.offset {
-                                        underlineComponent.color
-                                            .frame(width: UIScreen.main.bounds.width/3, height: underlineComponent.thickness)
-                                            .offset(x: -(verticalOffset/3), y: 20)
+            if visible {
+                HStack {
+                    ForEach(Array(textComponent.tabs.enumerated()), id: \.offset) { obj in
+                        Button {
+                            selectedTab = obj.offset
+                            print(selectedTab)
+                        } label: {
+                            VStack {
+                                Text(obj.element)
+                                    .bold(selectedTab == obj.offset)
+                                    .foregroundStyle(obj.offset == selectedTab ? textComponent.selectedColor : textComponent.unselectedColor)
+                                    .overlay {
+                                        if underlineComponent.visible && selectedTab == obj.offset {
+                                            underlineComponent.color
+                                                .frame(width: UIScreen.main.bounds.width/3, height: underlineComponent.thickness)
+                                                .offset(x: -(verticalOffset/3), y: 20)
+                                        }
                                     }
-                                }
+                            }
                         }
+                        .frame(maxWidth: .infinity)
                     }
-                    .frame(maxWidth: .infinity)
                 }
+                
+                Divider()
             }
-            
-            Divider()
             
             GeometryReader { geometry in
                 HStack(spacing: 0) {
