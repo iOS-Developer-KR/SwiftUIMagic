@@ -97,20 +97,23 @@ public struct TopTabBar<Content: View>: View {
                 .animation(.easeInOut, value: selectedTab)
                 .animation(.easeInOut, value: verticalOffset)
                 .gesture(
-                    DragGesture()
-                        .onChanged { value in
-                            verticalOffset = value.translation.width
-                        }
-                        .onEnded { value in
-                            let threshold = geometry.size.width / 2
-                            if -value.predictedEndTranslation.width > threshold && selectedTab < textComponent.tabs.count - 1 {
-                                selectedTab += 1
-                            } else if value.predictedEndTranslation.width > threshold && selectedTab > 0 {
-                                selectedTab -= 1
+                    visible ?
+                        DragGesture()
+                            .onChanged { value in
+                                verticalOffset = value.translation.width
                             }
-                            verticalOffset = 0
-                        }
+                            .onEnded { value in
+                                let threshold = geometry.size.width / 2
+                                if -value.predictedEndTranslation.width > threshold && selectedTab < textComponent.tabs.count - 1 {
+                                    selectedTab += 1
+                                } else if value.predictedEndTranslation.width > threshold && selectedTab > 0 {
+                                    selectedTab -= 1
+                                }
+                                verticalOffset = 0
+                            }
+                    : nil
                 )
+
 
             }
         }
